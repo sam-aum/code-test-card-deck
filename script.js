@@ -191,4 +191,9 @@ console.log(getParameter('cards'))
 const deck2 = [];
 deck2.push(getParameter('cards'))
 console.log(deck2)
-deckElement.appendChild(deck2)
+// deckElement.appendChild(deck2)
+
+// need to grab url query and parameters
+// push the parameters into a new deck
+// display cards in html
+// draw the card from the deck
