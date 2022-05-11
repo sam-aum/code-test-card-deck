@@ -177,5 +177,18 @@ class CardDeck {
 // Create a new card deck.
 const deck = new CardDeck(".deck", ".hand");
 
+
 // Take a look at the deck object and its methods.
 console.log(deck);
+
+function getParameter(parameterName){
+	let parameters = new URLSearchParams(window.location.search);
+	return parameters.get(parameterName);
+}
+
+console.log(getParameter('cards'))
+
+const deck2 = [];
+deck2.push(getParameter('cards'))
+console.log(deck2)
+deckElement.appendChild(deck2)
