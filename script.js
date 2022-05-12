@@ -194,107 +194,80 @@ const urlParameter = getParameter();
 
 const paramArray = urlParameter.split('=');
 console.log(deck.possibleCards)
-deck.filter('suit', ['spades'])
-console.log(deck.possibleCards)
 
+console.log(deck.possibleCards)
 
 
 //limits
 if (urlParameter.includes('limit')){
-	let splitByAnd = urlParameter.split('&')
-	for (let i = 0; i < splitByAnd.length; i++){
-		let currentParam = splitByAnd[i]
-		let splitEqual = currentParam.split('=')
+    let splitByAnd = urlParameter.split('&')
+    for (let i = 0; i < splitByAnd.length; i++){
+        let currentParam = splitByAnd[i]
+        let splitEqual = currentParam.split('=')
+        //cards
+        if(splitEqual[0] == 'cards'){
+            let cardIds = splitEqual[1].split('+');
+            deck.filter("id", cardIds)
+        } 
+        //suits
+        else if (splitEqual[0] == 'suits'){
+            let cardSuits = splitEqual[1].split('+');
+            deck.filter("suit", cardSuits)
+        }
+        //ranks
+        else if (splitEqual[0] == 'ranks'){
+            let cardRanks = splitEqual[1].split('+');
+            let cardRanksInt = []
+            for (let i = 0; i < cardRanks.length; i++) {
+                let curRank = parseInt(cardRanks[i])
+                cardRanksInt.push(curRank)
+            }
+            deck.filter("rank", cardRanksInt)
+        }
+        else {
+            let limitNum = splitEqual[1]
+            deck.limit(limitNum);
+            for (let i = 0; i < deck.possibleCards.length; i++) {
+                let cardId = deck.possibleCards[i].id
+                deck.draw(cardId)
+            }
+        }
 
-
-
-		//cards
-		if(paramArray[0] == 'cards'){
-		
-			cardIds = new Set(paramArray[1].split('+'));
-		
-			for (let i = 0; i < deck.possibleCards.length; i++){
-				let currentCard = deck.possibleCards[i];
-				if(cardIds.has(currentCard.id)){
-					deck.discard(currentCard.id)
-				}
-			}
-		} 
-		//suits
-		else if (paramArray[0] == 'suits'){
-			cardSuits = paramArray[1].split('+');
-			const set = new Set(cardSuits);
-
-			for (let i = 0; i < deck.deck.length; i++){
-				let currentCard = deck.deck[i];
-				if(!set.has(currentCard.suit)){
-					deck.possibleCards.discard(currentCard.id)
-				}
-			}
-		}
-
-		
-		//ranks
-		else {
-			cardRanks = paramArray[1].split('+');
-			const set = new Set();
-			for (let i = 0; i < cardRanks.length; i++){
-				let rank = parseInt(cardRanks[i]);
-				set.add(rank)
-			}
-			// console.log(set)
-			for (let i = 0; i < deck.deck.length; i++){
-				let currentCard = deck.deck[i];
-				if(set.has(currentCard.rank)){
-					deck.draw(currentCard.id)
-				}
-			}
-		}
-
-	}
+    }
 }
-
 
 //cards
 else if(paramArray[0] == 'cards'){
-	cardIds = paramArray[1].split('+');
-	
-	for (let i = 0; i < cardIds.length; i++){
-		deck.draw(cardIds[i]);
-	}
-	
+    let cardIds = paramArray[1].split('+');
+    deck.filter("id", cardIds)
+    for (let i = 0; i < deck.possibleCards.length; i++) {
+        let cardId = deck.possibleCards[i].id
+        deck.draw(cardId)
+    }
 } 
 //suits
 else if (paramArray[0] == 'suits'){
-	cardSuits = paramArray[1].split('+');
-	const set = new Set(cardSuits);
-
-	for (let i = 0; i < deck.deck.length; i++){
-		let currentCard = deck.deck[i];
-		if(set.has(currentCard.suit)){
-			deck.draw(currentCard.id)
-		}
-	}
+    let cardSuits = paramArray[1].split('+');
+    deck.filter("suit", cardSuits)
+    for (let i = 0; i < deck.possibleCards.length; i++) {
+        let cardId = deck.possibleCards[i].id
+        deck.draw(cardId)
+    }
 }
 //ranks
 else {
-	cardRanks = paramArray[1].split('+');
-	const set = new Set();
-	for (let i = 0; i < cardRanks.length; i++){
-		let rank = parseInt(cardRanks[i]);
-		set.add(rank)
-	}
-	// console.log(set)
-	for (let i = 0; i < deck.deck.length; i++){
-		let currentCard = deck.deck[i];
-		if(set.has(currentCard.rank)){
-			deck.draw(currentCard.id)
-		}
-	}
+    let cardRanks = paramArray[1].split('+');
+    let cardRanksInt = []
+    for (let i = 0; i < cardRanks.length; i++) {
+        let curRank = parseInt(cardRanks[i])
+        cardRanksInt.push(curRank)
+    }
+    deck.filter("rank", cardRanksInt)
+    for (let i = 0; i < deck.possibleCards.length; i++) {
+        let cardId = deck.possibleCards[i].id
+        deck.draw(cardId)
+    }
 }
-	
-
-
 
 
 
