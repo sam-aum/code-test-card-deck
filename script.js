@@ -181,19 +181,151 @@ const deck = new CardDeck(".deck", ".hand");
 // Take a look at the deck object and its methods.
 console.log(deck);
 
-function getParameter(parameterName){
+function getParameter(){
 	let parameters = new URLSearchParams(window.location.search);
-	return parameters.get(parameterName);
+
+	return parameters.toString();
 }
 
-console.log(getParameter('cards'))
 
-const deck2 = [];
-deck2.push(getParameter('cards'))
-console.log(deck2)
-// deckElement.appendChild(deck2)
+console.log(getParameter())
 
-// need to grab url query and parameters
-// push the parameters into a new deck
-// display cards in html
-// draw the card from the deck
+const urlParameter = getParameter();
+
+const paramArray = urlParameter.split('=');
+console.log(deck.possibleCards)
+deck.filter('suit', ['spades'])
+console.log(deck.possibleCards)
+
+
+
+//limits
+if (urlParameter.includes('limit')){
+	let splitByAnd = urlParameter.split('&')
+	for (let i = 0; i < splitByAnd.length; i++){
+		let currentParam = splitByAnd[i]
+		let splitEqual = currentParam.split('=')
+
+
+
+		//cards
+		if(paramArray[0] == 'cards'){
+		
+			cardIds = new Set(paramArray[1].split('+'));
+		
+			for (let i = 0; i < deck.possibleCards.length; i++){
+				let currentCard = deck.possibleCards[i];
+				if(cardIds.has(currentCard.id)){
+					deck.discard(currentCard.id)
+				}
+			}
+		} 
+		//suits
+		else if (paramArray[0] == 'suits'){
+			cardSuits = paramArray[1].split('+');
+			const set = new Set(cardSuits);
+
+			for (let i = 0; i < deck.deck.length; i++){
+				let currentCard = deck.deck[i];
+				if(!set.has(currentCard.suit)){
+					deck.possibleCards.discard(currentCard.id)
+				}
+			}
+		}
+
+		
+		//ranks
+		else {
+			cardRanks = paramArray[1].split('+');
+			const set = new Set();
+			for (let i = 0; i < cardRanks.length; i++){
+				let rank = parseInt(cardRanks[i]);
+				set.add(rank)
+			}
+			// console.log(set)
+			for (let i = 0; i < deck.deck.length; i++){
+				let currentCard = deck.deck[i];
+				if(set.has(currentCard.rank)){
+					deck.draw(currentCard.id)
+				}
+			}
+		}
+
+	}
+}
+
+
+//cards
+else if(paramArray[0] == 'cards'){
+	cardIds = paramArray[1].split('+');
+	
+	for (let i = 0; i < cardIds.length; i++){
+		deck.draw(cardIds[i]);
+	}
+	
+} 
+//suits
+else if (paramArray[0] == 'suits'){
+	cardSuits = paramArray[1].split('+');
+	const set = new Set(cardSuits);
+
+	for (let i = 0; i < deck.deck.length; i++){
+		let currentCard = deck.deck[i];
+		if(set.has(currentCard.suit)){
+			deck.draw(currentCard.id)
+		}
+	}
+}
+//ranks
+else {
+	cardRanks = paramArray[1].split('+');
+	const set = new Set();
+	for (let i = 0; i < cardRanks.length; i++){
+		let rank = parseInt(cardRanks[i]);
+		set.add(rank)
+	}
+	// console.log(set)
+	for (let i = 0; i < deck.deck.length; i++){
+		let currentCard = deck.deck[i];
+		if(set.has(currentCard.rank)){
+			deck.draw(currentCard.id)
+		}
+	}
+}
+	
+
+
+
+
+
+// grab parameter url -> ?cards=s-3+c-9+h-A
+// 1. split string by = sign -> cards, s-3+c-9+h-A
+// 2. create a list 
+// 3. s-3, c-9, h-A
+
+// for (all the cards):
+// 	if (id of card == ids we're looking for)
+
+
+// list of id
+// 	deck(id)
+
+// 	for id in ids
+// 		draw(id)
+
+
+/*
+	suits=spades - >suits / spades
+	limit=4
+
+	possible deck - > discard all other cards 
+
+	if (parameter,includes('limit')){
+		 let splitByAnd = parameter.split('&')
+		 for (let i = 0; i < splitByAnd.length();i++){
+			 let cur = splitByAnd[i]
+			 let splitEqual = cur.split('=')
+		 }
+	}
+
+*/
